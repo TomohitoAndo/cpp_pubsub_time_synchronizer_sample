@@ -15,12 +15,11 @@
 using sample_msgs::msg::Int32Stamped;
 using Int32StampedConstPtr = Int32Stamped::ConstSharedPtr;
 using std::placeholders::_1;
-namespace sync_policies = message_filters::sync_policies;
 
 class SyncedSubscriber : public rclcpp::Node
 {
 public:
-  using ExactTimeSyncPolicy = sync_policies::ExactTime<Int32Stamped, Int32Stamped>;
+  using ExactTimeSyncPolicy = message_filters::sync_policies::ExactTime<Int32Stamped, Int32Stamped>;
   using ExactTimeSynchronizer = message_filters::Synchronizer<ExactTimeSyncPolicy>;
 
   SyncedSubscriber()
@@ -34,7 +33,6 @@ public:
         this, "topic2", rclcpp::SensorDataQoS().keep_last(max_queue_size).get_rmw_qos_profile());
 
     // sync subscribers with Exact Time Sync Policy
-    // sync_inputs_ = std::make_shared<ExactTimeSynchronizer>(ExactTimeSyncPolicy(10), sub_topic1_, sub_topic2_);
     sync_inputs_ = std::make_unique<ExactTimeSynchronizer>(max_queue_size);
     sync_inputs_->connectInput(sub_topic1_, sub_topic2_);
     sync_inputs_->registerCallback(&SyncedSubscriber::synced_topic_callback, this);
