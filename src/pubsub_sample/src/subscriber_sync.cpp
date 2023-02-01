@@ -39,13 +39,16 @@ public:
     sync_inputs_->connectInput(sub_topic1_, sub_topic2_);
     sync_inputs_->registerCallback(&SyncedSubscriber::synced_topic_callback, this);
 
-    // This is NG
+    // This is NG in this case
     // sync_inputs_->registerCallback(std::bind(
     //     &SyncedSubscriber::synced_topic_callback, this, std::placeholders::_1, std::placeholders::_2));
 
-    // This is OK
+    // If arguments for the callback are ConstSharePtr, this is also acceptable
     // sync_inputs_->registerCallback(std::bind(
     //     &SyncedSubscriber::synced_topic_callback_shared_ptr, this, std::placeholders::_1, std::placeholders::_2));
+
+    // this is also OK
+    // sync_inputs_->registerCallback(&SyncedSubscriber::synced_topic_callback_shared_ptr, this);
   }
 
 private:
