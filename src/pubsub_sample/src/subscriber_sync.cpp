@@ -35,7 +35,7 @@ public:
 
     // sync subscribers with Exact Time Sync Policy
     // sync_inputs_ = std::make_shared<ExactTimeSynchronizer>(ExactTimeSyncPolicy(10), sub_topic1_, sub_topic2_);
-    sync_inputs_ = std::make_shared<ExactTimeSynchronizer>(max_queue_size);
+    sync_inputs_ = std::make_unique<ExactTimeSynchronizer>(max_queue_size);
     sync_inputs_->connectInput(sub_topic1_, sub_topic2_);
     sync_inputs_->registerCallback(&SyncedSubscriber::synced_topic_callback, this);
 
@@ -70,7 +70,7 @@ private:
   message_filters::Subscriber<Int32Stamped> sub_topic2_;
 
   // Synchronized input
-  std::shared_ptr<ExactTimeSynchronizer> sync_inputs_;
+  std::unique_ptr<ExactTimeSynchronizer> sync_inputs_;
 };
 
 int main(int argc, char *argv[])
